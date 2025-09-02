@@ -67,6 +67,7 @@ namespace Switcheroo
         private SystemWindow _foregroundWindow;
         private bool _altTabAutoSwitch;
         private bool _sortWinList = false;
+        private bool _movingToCursor = false;
 
         public MainWindow()
         {
@@ -470,8 +471,33 @@ namespace Switcheroo
         /// <summary>
         /// Place the Switcheroo window in the center of the screen
         /// </summary>
+        private void MoveWindowToCursor ()
+        {
+            _movingToCursor = true;
+
+            // Reset height every time to ensure that resolution changes take effect
+            Border.MaxHeight = SystemParameters.PrimaryScreenHeight;
+
+            // Force a rendering before repositioning the window
+            SizeToContent = SizeToContent.Manual;
+            SizeToContent = SizeToContent.WidthAndHeight;
+            
+            // Get current mouse position relative to screen
+            var mousePos = System.Windows.Forms.Control.MousePosition;
+
+            // Position the window at the cursor
+            Left = mousePos.X;
+            Top = mousePos.Y;
+            
+        }
+
         private void CenterWindow()
         {
+            if (_movingToCursor) { //skip this time
+                _movingToCursor = false; //reset
+                return; 
+            }
+
             // Reset height every time to ensure that resolution changes take effect
             Border.MaxHeight = SystemParameters.PrimaryScreenHeight;
 
@@ -623,13 +649,13 @@ namespace Switcheroo
                 return;
             }
 
-            _foregroundWindow = SystemWindow.ForegroundWindow;
-
-            if (_foregroundWindow.ClassName == "MultitaskingViewFrame")
-            {
-                // If Windows' task switcher is on the screen then don't do anything
-                return;
-            }
+            //BN_2025-09-02: commented: seems not happy with Windows11
+            //_foregroundWindow = SystemWindow.ForegroundWindow;
+            //if (_foregroundWindow.ClassName == "MultitaskingViewFrame")
+            //{
+            //    // If Windows' task switcher is on the screen then don't do anything
+            //    return;
+            //}
 
             e.Handled = true;
 
@@ -696,6 +722,7 @@ namespace Switcheroo
             Show();
             SystemWindow.ForegroundWindow = thisWindow;
             Activate();
+            MoveWindowToCursor();
 
             // Release the Alt key if it was pressed above
             if (altKeyPressed)

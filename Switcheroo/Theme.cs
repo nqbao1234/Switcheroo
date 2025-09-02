@@ -31,7 +31,8 @@ namespace Switcheroo
         public static void LoadTheme()
         {
             Mode mode;
-            Enum.TryParse(Settings.Default.Theme, out mode);
+            //Enum.TryParse(Settings.Default.Theme, out mode);
+            mode = Mode.Light; //BN_2025-09-01
             switch (mode)
             {
                 case Mode.Light:

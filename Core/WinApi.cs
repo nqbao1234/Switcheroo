@@ -27,6 +27,41 @@ namespace Switcheroo.Core
 {
     internal static class WinApi
     {
+        //BN_2025-09-02
+        //======================
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetCursorPos(int X, int Y);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        public static void MoveCursorToActiveWindowCenter()
+        {
+            IntPtr hWnd = GetForegroundWindow();
+            if (hWnd == IntPtr.Zero) return;
+
+            if (GetWindowRect(hWnd, out RECT rect))
+            {
+                int centerX = (rect.Left + rect.Right) / 2;
+                int centerY = (rect.Top + rect.Bottom) / 2;
+
+                SetCursorPos(centerX, centerY);
+            }
+        }
+        //======================
+
         public delegate bool EnumWindowsProc(IntPtr hWnd, int lParam);
 
         public static IntPtr Statusbar = FindWindow("Shell_TrayWnd", "");

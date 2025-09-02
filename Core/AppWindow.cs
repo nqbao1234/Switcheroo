@@ -85,16 +85,12 @@ namespace Switcheroo.Core
         /// <summary>
         /// Sets the focus to this window and brings it to the foreground.
         /// </summary>
-        public void SwitchTo()
-        {
-            // This function is deprecated, so should probably be replaced.
-            WinApi.SwitchToThisWindow(HWnd, true);
-        }
 
         public void SwitchToLastVisibleActivePopup()
         {
             var lastActiveVisiblePopup = GetLastActiveVisiblePopup();
             WinApi.SwitchToThisWindow(lastActiveVisiblePopup, true);
+            WinApi.MoveCursorToActiveWindowCenter();
         }
 
         public AppWindow Owner
