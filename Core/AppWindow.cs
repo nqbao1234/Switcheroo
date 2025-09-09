@@ -150,6 +150,7 @@ namespace Switcheroo.Core
             return (ExtendedStyle & WindowExStyleFlags.NOACTIVATE) == WindowExStyleFlags.NOACTIVATE;
         }
 
+        private IntPtr GetLastActiveVisiblePopup()
         {
             // Which windows appear in the Alt+Tab list? -Raymond Chen
             // http://blogs.msdn.com/b/oldnewthing/archive/2007/10/08/5351207.aspx
