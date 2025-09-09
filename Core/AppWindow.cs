@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -86,10 +87,11 @@ namespace Switcheroo.Core
         /// Sets the focus to this window and brings it to the foreground.
         /// </summary>
 
-        public void SwitchToLastVisibleActivePopup()
+        public async Task SwitchToLastVisibleActivePopupAsync()
         {
             var lastActiveVisiblePopup = GetLastActiveVisiblePopup();
             WinApi.SwitchToThisWindow(lastActiveVisiblePopup, true);
+            await Task.Delay(200); //wait for window to become the foreground one
             WinApi.MoveCursorToActiveWindowCenter();
         }
 
@@ -148,7 +150,6 @@ namespace Switcheroo.Core
             return (ExtendedStyle & WindowExStyleFlags.NOACTIVATE) == WindowExStyleFlags.NOACTIVATE;
         }
 
-        private IntPtr GetLastActiveVisiblePopup()
         {
             // Which windows appear in the Alt+Tab list? -Raymond Chen
             // http://blogs.msdn.com/b/oldnewthing/archive/2007/10/08/5351207.aspx

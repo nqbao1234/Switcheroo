@@ -518,7 +518,7 @@ namespace Switcheroo
             foreach (var item in lblProgramName.SelectedItems)
             {
                 var win = (AppWindowViewModel)item;
-                win.AppWindow.SwitchToLastVisibleActivePopup();
+                win.AppWindow.SwitchToLastVisibleActivePopupAsync();
             }
 
             HideWindow();
